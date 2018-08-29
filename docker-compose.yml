@@ -1,0 +1,23 @@
+version: '3'
+services:
+    node:
+        image: iota-node:custom
+        environment:
+            - API_PORT
+            - UDP_PORT
+            - TCP_PORT
+            - REMOTE_API_LIMIT
+            - JAVA_OPTIONS
+        volumes:
+            - ./.data/iri/data:/iri/data
+            # TODO for first start up, copy conf files from source to persistent folder ./.data/iri/conf
+            - ./.data/iri/conf:/iri/conf
+        ports:
+            - "${API_PORT}:${API_PORT}"
+            - "${UDP_PORT}:${UDP_PORT}/udp"
+            - "${TCP_PORT}:${TCP_PORT}"
+    nelson:
+        image: romansemko/nelson.cli
+        ports:
+            - "${NELSON_PORT}:${NELSON_PORT}"
+        command: -r node -i ${API_PORT} -u ${UDP_PORT} -t ${TCP_PORT} --getNeighbors

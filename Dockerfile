@@ -1,9 +1,9 @@
 FROM maven:3.5-jdk-9-slim as build
 
 # Install build dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-		git \
-	&& rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends git && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /iri
 
@@ -13,7 +13,7 @@ RUN mvn clean package
 #
 # Execution image
 #
-FROM openjdk:8-slim
+FROM kitsook/oracle-jdk-slim:jdk10
 
 COPY --from=build /iri/target/iri*.jar /iri/target/
 COPY conf/* /iri/conf/
